@@ -73,13 +73,19 @@ def slug(text):
     return re.sub(r"[^a-z0-9]+", "-", text.lower().replace("'", "")).strip("-")
 
 
+def photo_url(row):
+    """Return the photo URL, or "" when the cell is empty or says there is no photo."""
+    value = clean(row["Photo URL"])
+    return value if value.startswith("https://") else ""
+
+
 def render(row):
     name = clean(row["Name"])
     job = clean(row["Job position"])
     phone = digits(row["Phone"])
     ext = digits(row["Phone extension"])
     whatsapp = digits(row["whatsapp"])
-    photo = clean(row["Photo URL"])
+    photo = photo_url(row)
     e = html.escape
 
     phone_html = ""
@@ -111,7 +117,7 @@ def main():
             name, job = clean(row["Name"]), clean(row["Job position"])
             if not name:
                 continue
-            if job and not clean(row["Photo URL"]):
+            if job and not photo_url(row):
                 print(f"no photo: {name} ({job})", file=sys.stderr)
             base = slug(f"{name} {job}")
             filename, n = base, 2
