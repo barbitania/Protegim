@@ -35,7 +35,7 @@ TEMPLATE = """<table width="300" style="font-family:Tahoma, sans-serif;">
   <tr>
     <td style="padding-right:50px;padding-top:10px;vertical-align:top;width:180px;">
       <img src="https://i.imgur.com/SSdSv0V.png" width="150" alt="Protegim"><br>
-{photo}      <span style="font-size:14px; font-weight:bold;">
+{photo}      <span style="font-size:14px; font-weight:bold;{name_style}">
         {name}
       </span><br>
 {job}      <br>
@@ -91,6 +91,8 @@ def render(row):
     return TEMPLATE.format(
         photo=PHOTO.format(url=e(photo), name=e(name)) if job and photo else "",
         name=e(name),
+        # Department rows have no photo, so add space below the logo.
+        name_style="" if job else " display:inline-block; margin-top:20px;",
         job=JOB.format(job=e(job)) if job else "",
         phone=phone_html,
         whatsapp=WHATSAPP.format(digits=whatsapp, text=pretty(whatsapp)) if whatsapp else "",
