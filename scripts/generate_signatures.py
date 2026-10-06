@@ -89,10 +89,10 @@ def render(row):
         phone_html = PHONE.format(href=phone_href, text=e(phone_text))
 
     return TEMPLATE.format(
-        photo=PHOTO.format(url=e(photo), name=e(name)) if job and photo else "",
+        photo=PHOTO.format(url=e(photo), name=e(name)) if photo else "",
         name=e(name),
-        # Department rows have no photo, so add space below the logo.
-        name_style="" if job else " display:inline-block; margin-top:20px;",
+        # Signatures without a photo (departments, some people) get space below the logo.
+        name_style="" if photo else " display:inline-block; margin-top:20px;",
         job=JOB.format(job=e(job)) if job else "",
         phone=phone_html,
         whatsapp=WHATSAPP.format(digits=whatsapp, text=pretty(whatsapp)) if whatsapp else "",
@@ -112,7 +112,7 @@ def main():
             if not name:
                 continue
             if job and not clean(row["Photo URL"]):
-                print(f"missing photo: {name} ({job})", file=sys.stderr)
+                print(f"no photo: {name} ({job})", file=sys.stderr)
             base = slug(f"{name} {job}")
             filename, n = base, 2
             while filename in used:
